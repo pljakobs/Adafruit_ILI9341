@@ -6,7 +6,7 @@
 * @section intro_sec Introduction
 *
 * This is the documentation for Adafruit's ILI9341 driver for the
-* Arduino platform. 
+* Arduino platform.
 *
 * This library works with the Adafruit 2.8" Touch Shield V2 (SPI)
 *    http://www.adafruit.com/products/1651
@@ -20,7 +20,7 @@
 * 2.2" 18-bit color TFT LCD display with microSD card breakout - ILI9340
 *    https://www.adafruit.com/product/1770
 *
-* TFT FeatherWing - 2.4" 320x240 Touchscreen For All Feathers 
+* TFT FeatherWing - 2.4" 320x240 Touchscreen For All Feathers
 *    https://www.adafruit.com/product/3315
 *
 * These displays use SPI to communicate, 4 or 5 pins are required
@@ -634,6 +634,7 @@ void Adafruit_ILI9341::writePixel(int16_t x, int16_t y, uint16_t color) {
 */
 /**************************************************************************/
 void Adafruit_ILI9341::writeFillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color){
+    //Serial.printf("called writeFilledRect with color565\n");
     if((x >= _width) || (y >= _height)) return;
     int16_t x2 = x + w - 1, y2 = y + h - 1;
     if((x2 < 0) || (y2 < 0)) return;
@@ -657,6 +658,30 @@ void Adafruit_ILI9341::writeFillRect(int16_t x, int16_t y, int16_t w, int16_t h,
     writeColor(color, len);
 }
 
+void Adafruit_ILI9341::writeFillRect(int16_t x, int16_t y, int16_t w, int16_t h, color24 color){
+    //Serial.printf("called writeFilledRect with color24\n");
+    if((x >= _width) || (y >= _height)) return;
+    int16_t x2 = x + w - 1, y2 = y + h - 1;
+    if((x2 < 0) || (y2 < 0)) return;
+
+    // Clip left/top
+    if(x < 0) {
+        x = 0;
+        w = x2 + 1;
+    }
+    if(y < 0) {
+        y = 0;
+        h = y2 + 1;
+    }
+
+    // Clip right/bottom
+    if(x2 >= _width)  w = _width  - x;
+    if(y2 >= _height) h = _height - y;
+
+    int32_t len = (int32_t)w * h;
+    setAddrWindow(x, y, w, h);
+    writeColor(((color.r & 0xF8) << 8) | ((color.g & 0xFC) << 3) | ((color.b & 0xF8) >> 3), len);
+}
 
 /**************************************************************************/
 /*!
@@ -670,7 +695,9 @@ void Adafruit_ILI9341::writeFillRect(int16_t x, int16_t y, int16_t w, int16_t h,
 void Adafruit_ILI9341::writeFastVLine(int16_t x, int16_t y, int16_t l, uint16_t color){
     writeFillRect(x, y, 1, l, color);
 }
-
+void Adafruit_ILI9341::writeFastVLine(int16_t x, int16_t y, int16_t l, color24 color){
+    writeFillRect(x, y, 1, l, color);
+}
 
 /**************************************************************************/
 /*!
@@ -682,6 +709,9 @@ void Adafruit_ILI9341::writeFastVLine(int16_t x, int16_t y, int16_t l, uint16_t 
 */
 /**************************************************************************/
 void Adafruit_ILI9341::writeFastHLine(int16_t x, int16_t y, int16_t l, uint16_t color){
+    writeFillRect(x, y, l, 1, color);
+}
+void Adafruit_ILI9341::writeFastHLine(int16_t x, int16_t y, int16_t l, color24 color){
     writeFillRect(x, y, l, 1, color);
 }
 
@@ -710,11 +740,18 @@ void Adafruit_ILI9341::drawPixel(int16_t x, int16_t y, uint16_t color){
 /**************************************************************************/
 void Adafruit_ILI9341::drawFastVLine(int16_t x, int16_t y,
         int16_t l, uint16_t color) {
+          //Serial.printf("called drawFastVLine in ILI9341 with color565\n");
     startWrite();
     writeFastVLine(x, y, l, color);
     endWrite();
 }
-
+void Adafruit_ILI9341::drawFastVLine(int16_t x, int16_t y,
+        int16_t l, color24 color) {
+          //Serial.printf("called drawFastVLine in ILI9341 with color24\n");
+    startWrite();
+    writeFastVLine(x, y, l, color);
+    endWrite();
+}
 /**************************************************************************/
 /*!
    @brief  Draw a horizontal line, includes code for SPI transaction
@@ -726,11 +763,18 @@ void Adafruit_ILI9341::drawFastVLine(int16_t x, int16_t y,
 /**************************************************************************/
 void Adafruit_ILI9341::drawFastHLine(int16_t x, int16_t y,
         int16_t l, uint16_t color) {
+        //Serial.printf("called drawFastVLine in ILI9341 with color565\n");
     startWrite();
     writeFastHLine(x, y, l, color);
     endWrite();
 }
-
+void Adafruit_ILI9341::drawFastHLine(int16_t x, int16_t y,
+        int16_t l, color24 color) {
+          //Serial.printf("called drawFastHLine in ILI9341 with color24\n");
+    startWrite();
+    writeFastHLine(x, y, l, color);
+    endWrite();
+}
 /**************************************************************************/
 /*!
    @brief  Fill a rectangle, includes code for SPI transaction
@@ -904,4 +948,3 @@ void Adafruit_ILI9341::spiWrite(uint8_t b) {
         SSPI_SCK_HIGH();
     }
 }
-

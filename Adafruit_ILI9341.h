@@ -1,8 +1,8 @@
 /*!
 * @file Adafruit_ILI9341.h
-* 
+*
 * This is the documentation for Adafruit's ILI9341 driver for the
-* Arduino platform. 
+* Arduino platform.
 *
 * This library works with the Adafruit 2.8" Touch Shield V2 (SPI)
 *    http://www.adafruit.com/products/1651
@@ -12,7 +12,7 @@
 *    https://www.adafruit.com/product/1770
 * 2.2" 18-bit color TFT LCD display with microSD card breakout - ILI9340
 *    https://www.adafruit.com/product/1770
-* TFT FeatherWing - 2.4" 320x240 Touchscreen For All Feathers 
+* TFT FeatherWing - 2.4" 320x240 Touchscreen For All Feathers
 *    https://www.adafruit.com/product/3315
 *
 * These displays use SPI to communicate, 4 or 5 pins are required
@@ -58,26 +58,26 @@ typedef volatile uint32_t RwReg;
 #define ILI9341_NOP        0x00      ///< No-op register
 #define ILI9341_SWRESET    0x01      ///< Software reset register
 #define ILI9341_RDDID      0x04      ///< Read display identification information
-#define ILI9341_RDDST      0x09      ///< Read Display Status 
+#define ILI9341_RDDST      0x09      ///< Read Display Status
 
 #define ILI9341_SLPIN      0x10      ///< Enter Sleep Mode
 #define ILI9341_SLPOUT     0x11      ///< Sleep Out
 #define ILI9341_PTLON      0x12      ///< Partial Mode ON
 #define ILI9341_NORON      0x13      ///< Normal Display Mode ON
 
-#define ILI9341_RDMODE     0x0A      ///< Read Display Power Mode 
+#define ILI9341_RDMODE     0x0A      ///< Read Display Power Mode
 #define ILI9341_RDMADCTL   0x0B      ///< Read Display MADCTL
 #define ILI9341_RDPIXFMT   0x0C      ///< Read Display Pixel Format
-#define ILI9341_RDIMGFMT   0x0D      ///< Read Display Image Format 
+#define ILI9341_RDIMGFMT   0x0D      ///< Read Display Image Format
 #define ILI9341_RDSELFDIAG 0x0F      ///< Read Display Self-Diagnostic Result
 
 #define ILI9341_INVOFF     0x20      ///< Display Inversion OFF
-#define ILI9341_INVON      0x21      ///< Display Inversion ON 
-#define ILI9341_GAMMASET   0x26      ///< Gamma Set 
-#define ILI9341_DISPOFF    0x28      ///< Display OFF 
+#define ILI9341_INVON      0x21      ///< Display Inversion ON
+#define ILI9341_GAMMASET   0x26      ///< Gamma Set
+#define ILI9341_DISPOFF    0x28      ///< Display OFF
 #define ILI9341_DISPON     0x29      ///< Display ON
 
-#define ILI9341_CASET      0x2A      ///< Column Address Set 
+#define ILI9341_CASET      0x2A      ///< Column Address Set
 #define ILI9341_PASET      0x2B      ///< Page Address Set
 #define ILI9341_RAMWR      0x2C      ///< Memory Write
 #define ILI9341_RAMRD      0x2E      ///< Memory Read
@@ -164,8 +164,11 @@ class Adafruit_ILI9341 : public Adafruit_GFX {
         void      endWrite(void);
         void      writePixel(int16_t x, int16_t y, uint16_t color);
         void      writeFillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
+        void      writeFillRect(int16_t x, int16_t y, int16_t w, int16_t h, color24 color);
         void      writeFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color);
         void      writeFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color);
+        void      writeFastVLine(int16_t x, int16_t y, int16_t h, color24 color);
+        void      writeFastHLine(int16_t x, int16_t y, int16_t w, color24 color);
 
         // Transaction API not used by GFX
         void      setAddrWindow(uint16_t x, uint16_t y, uint16_t w, uint16_t h);
@@ -177,6 +180,8 @@ class Adafruit_ILI9341 : public Adafruit_GFX {
         // Recommended Non-Transaction
         void      drawFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color);
         void      drawFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color);
+        void      drawFastVLine(int16_t x, int16_t y, int16_t h, color24 color);
+        void      drawFastHLine(int16_t x, int16_t y, int16_t w, color24 color);
         void      fillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
 
         using     Adafruit_GFX::drawRGBBitmap; // Check base class first
