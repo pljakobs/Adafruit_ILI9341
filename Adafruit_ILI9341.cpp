@@ -55,7 +55,6 @@
 #endif
 #include <limits.h>
 
-
 #define MADCTL_MY  0x80     ///< Bottom to top
 #define MADCTL_MX  0x40     ///< Right to left
 #define MADCTL_MV  0x20     ///< Reverse Mode
